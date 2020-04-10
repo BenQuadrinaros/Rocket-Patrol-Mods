@@ -7,4 +7,5 @@ let config = {
 
 let game = new Phaser.Game(config);
 
-//this is for git
+//reserve some keyboard variables
+let keyF, keyLEFT, keyRIGHT;

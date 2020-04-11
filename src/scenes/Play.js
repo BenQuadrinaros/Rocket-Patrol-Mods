@@ -28,8 +28,8 @@ class Play extends Phaser.Scene {
 
         //add spaceships x3
         this.ship01 = new Spaceship(this, game.config.width + 192, 132, "spaceship", 0, 30).setOrigin(0,0);
-        this.ship02 = new Spaceship(this, game.config.width + 67, 255, "spaceship", 0, 30).setOrigin(0,0);
-        this.ship03 = new Spaceship(this, game.config.width + 399, 333, "spaceship", 0, 30).setOrigin(0,0);
+        this.ship02 = new Spaceship(this, game.config.width + 96, 196, "spaceship", 0, 20).setOrigin(0,0);
+        this.ship03 = new Spaceship(this, game.config.width + 0, 260, "spaceship", 0, 10).setOrigin(0,0);
 
         //define keyboard keys
         keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
@@ -47,5 +47,28 @@ class Play extends Phaser.Scene {
         this.ship01.update();
         this.ship02.update();
         this.ship03.update();
+
+        //check collisions on each ship
+        if(this.checkCollision(this.p1Rocket, this.ship01)) {
+            this.p1Rocket.reset();
+            this.ship01.reset();
+        }
+        if(this.checkCollision(this.p1Rocket, this.ship02)) {
+            this.p1Rocket.reset();
+            this.ship02.reset();
+        }
+        if(this.checkCollision(this.p1Rocket, this.ship03)) {
+            this.p1Rocket.reset();
+            this.ship03.reset();
+        }
+    }
+
+    checkCollision(rocket, ship) {
+        if(rocket.x < ship.x + ship.width && rocket.x + rocket.width > ship.x &&
+            rocket.y < ship.y + ship.height && rocket.y + rocket.height > ship.y) {
+                return true;
+            } else {
+                return false;
+            }
     }
 }

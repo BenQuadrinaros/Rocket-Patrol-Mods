@@ -2,7 +2,7 @@
 // Simultaneous 2-Player Mode:   50
 // New timing/scoring mechanic:  25
 // Display time remaining:       15
-// 30 secind speed increase:     10
+// 30 second speed increase:     10
 // _________________________________
 //  Total:                      100
 

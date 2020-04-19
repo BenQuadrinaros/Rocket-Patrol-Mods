@@ -1,5 +1,4 @@
 // Benjamin Rowland
-
 // Simultaneous 2-Player Mode:   50
 // New timing/scoring mechanic:  25
 // Display time remaining:       15

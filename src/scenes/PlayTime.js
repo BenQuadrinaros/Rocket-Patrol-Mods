@@ -1,6 +1,6 @@
-class Play extends Phaser.Scene {
+class PlayTime extends Phaser.Scene {
     constructor() {
-        super("playScene");
+        super("playTime");
     }
 
     preload() {
@@ -29,18 +29,18 @@ class Play extends Phaser.Scene {
         //green UI background
         this.add.rectangle(37,42,566,64,0x00FF00).setOrigin(0,0);
 
+        //define keyboard keys
+        keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
+        keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
+        keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+
         //add rocket (p1)
-        this.p1Rocket = new Rocket(this, game.config.width/2, 431, "rocket").setScale(.5,.5).setOrigin(0,0);
+        this.p1Rocket = new Rocket(this, game.config.width/2, 431, "rocket", keyLEFT, keyRIGHT, keyF).setScale(.5,.5).setOrigin(0,0);
 
         //add spaceships x3
         this.ship01 = new Spaceship(this, game.config.width + 192, 132, "spaceship", 0, 30).setOrigin(0,0);
         this.ship02 = new Spaceship(this, game.config.width + 96, 196, "spaceship", 0, 20).setOrigin(0,0);
         this.ship03 = new Spaceship(this, game.config.width + 0, 260, "spaceship", 0, 10).setOrigin(0,0);
-
-        //define keyboard keys
-        keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
-        keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
-        keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
 
         //create animation for explosion
         this.anims.create({
@@ -70,9 +70,10 @@ class Play extends Phaser.Scene {
         scoreConfig.fixedWidth = 0;
         this.clock = this.time.delayedCall(game.settings.gameTimer, () => {
             this.add.text(game.config.width/2, game.config.height/2, "GAME OVER", scoreConfig).setOrigin(.5);
-            this.add.text(game.config.width/2, game.config.height/2 + 64, "(F)ire to Restart or <- for Menu", scoreConfig).setOrigin(.5);
+            this.add.text(game.config.width/2, game.config.height/2 + 64, "(F)ire to Restart or (←) for Menu", scoreConfig).setOrigin(.5);
             this.gameOver = true;
         }, null, this);
+        this.timeRight = this.add.text(536, 54, Math.floor((game.settings.gameTimer - this.clock.elapsed) / 1000), scoreConfig);
     }
 
     update() {
@@ -82,6 +83,13 @@ class Play extends Phaser.Scene {
         }
         if(this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)) {
             this.scene.start("menuScene");
+        }
+
+        //update time display
+        this.timeRight.text = Math.floor((game.settings.gameTimer - this.clock.elapsed) / 1000);
+        if(!this.increase30 && (this.clock.elapsed / 1000) >= 30) {
+            game.settings.spaceshipSpeed += 3;
+            this.increase30 = true;
         }
 
         //scroll starfield
@@ -131,6 +139,7 @@ class Play extends Phaser.Scene {
         //increment score and repaint
         this.p1Score += ship.points;
         this.scoreLeft.text = this.p1Score;
+        this.clock.elapsed -= (150*ship.points);
         this.sound.play("sfx_explosion");
     }
 }
